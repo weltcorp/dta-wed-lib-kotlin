@@ -7,9 +7,6 @@ plugins {
     `maven-publish`
 }
 
-group = "com.weltcorp.dta.wed.diary"
-version = "0.1.0"
-
 repositories {
     mavenCentral()
 }
@@ -74,17 +71,6 @@ protobuf {
         }
     }
 }
-
-//publishing {
-//    (publications) {
-//        "mavenJava"(MavenPublication::class) {
-//            from(components["java"])
-//            groupId = "com.github.WonJoong"
-//            artifactId = "kodi"
-//            version = "0.2.1"
-//        }
-//    }
-//}
 
 publishing {
     publications {

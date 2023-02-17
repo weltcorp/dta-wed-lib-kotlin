@@ -1,27 +1,34 @@
-
 plugins {
     kotlin("jvm") version "1.8.0"
     application
     `maven-publish`
 }
 
-group = "org.example"
-version = "0.1.0"
+allprojects {
+    group = "com.weltcorp.dta.wed.lib"
+    version = "0.1.4"
 
-repositories {
-    mavenCentral()
+    repositories {
+        mavenCentral()
+    }
 }
 
-dependencies {
-    implementation(project(mapOf("path" to ":diary")))
-    testImplementation(kotlin("test"))
+subprojects {
+    apply(plugin = "kotlin")
+    apply(plugin = "application")
+    apply(plugin = "maven-publish")
+
+    tasks.test {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        testImplementation(kotlin("test"))
+    }
 }
 
 
 
-tasks.test {
-    useJUnitPlatform()
-}
 
 kotlin {
     jvmToolchain(8)
@@ -50,19 +57,19 @@ application {
 //    }
 //}
 
-publishing {
-//    repositories {
-//        maven {
-//            // change to point to your repo, e.g. http://my.org/repo
-//            url = uri("$buildDir/repo")
+//publishing {
+////    repositories {
+////        maven {
+////            // change to point to your repo, e.g. http://my.org/repo
+////            url = uri("$buildDir/repo")
+////        }
+////    }
+//    publications {
+//        register("mavenJava", MavenPublication::class) {
+//            from(components["java"])
+//            groupId = "com.weltcorp.dta.wed.lib"
+//            artifactId = "lib"
+//            version = "1.1"
 //        }
 //    }
-    publications {
-        register("mavenJava", MavenPublication::class) {
-            from(components["java"])
-            groupId = "com.weltcorp.dta.wed.lib"
-            artifactId = "lib"
-            version = "1.1"
-        }
-    }
-}
+//}
