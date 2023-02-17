@@ -96,9 +96,9 @@ publishing {
 //            version = '0.2.1'
 //        }
         create<MavenPublication>("maven") {
-            groupId = "com.weltcorp.dta.wed.lib"
-            artifactId = "lib"
-            version = "1.1"
+            groupId = "com.github.weltcorp"
+            artifactId = "dta-wed-lib-kotlin"
+            version = "0.1.2"
 
             from(components["java"])
         }
