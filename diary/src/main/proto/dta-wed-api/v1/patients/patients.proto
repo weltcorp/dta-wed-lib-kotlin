@@ -1,0 +1,312 @@
+syntax = "proto3";
+package dta.wed.api.v1.patients;
+
+option go_package = "github.com/weltcorp/dta-wed-api/internal/proto/dta-wed-api/v1/patients";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+service PatientsData {
+  rpc GetPatients(GetPatientsRequest) returns (GetPatientsResponse) {
+    option (google.api.http) = { get: "/v1/patients" };
+  }
+  rpc GetPatientsByAccountId(GetPatientsByAccountIdRequest) returns (GetPatientsByAccountIdResponse) {
+    option (google.api.http) = { get: "/v1/patients/accounts/{accountId}" };
+  }
+  rpc GetPatientByUserId(GetPatientByUserIdRequest) returns (GetPatientByUserIdResponse) {
+    option (google.api.http) = { get: "/v1/patients/users/{userId}" };
+  }
+  rpc GetPatientsBySiteId(GetPatientsBySiteIdRequest) returns (GetPatientsBySiteIdResponse) {
+    option (google.api.http) = { get: "/v1/patients/sites/{siteId}" };
+  }
+  rpc GetPatientMedicalRecordsByUserId(GetPatientMedicalRecordsByUserIdRequest) returns (GetPatientMedicalRecordsByUserIdRequestResponse) {
+    option (google.api.http) = { get: "/v1/patients/medicalRecords/users/{userId}" };
+  }
+  rpc GetDropoutPatients(GetDropoutPatientsRequest) returns (GetDropoutPatientsResponse) {
+    option (google.api.http) = { get: "/v1/patients/dropout" };
+  }
+  rpc GetPatientOverview(GetPatientOverviewRequest) returns (GetPatientOverviewResponse) {
+    option (google.api.http) = { get: "/v1/patients/overview" };
+  }
+  rpc GetPatientClinicalRecordsByUserId(GetPatientClinicalRecordsByUserIdRequest) returns (GetPatientClinicalRecordsByUserIdResponse) {
+    option (google.api.http) = { get: "/v1/patients/clinicalRecords/users/{userId}" };
+  }
+  rpc DisablePatientByUserId(DisablePatientByUserIdRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v1/patients/users/{userId}/disable" , body: "*" };
+  }
+  rpc GetPatientsByVisitId(GetPatientsByVisitIdRequest) returns (GetPatientsByVisitIdResponse) {
+    option (google.api.http) = { get: "/v1/patients/visits/{visitId}" };
+  }
+}
+
+message GetPatientsByAccountIdRequest {
+  int32 accountId = 1;
+  string accesscode = 2;
+  string email = 3;
+}
+
+message GetPatientsByAccountIdResponse {
+  message Patient {
+    int32 userId = 1;
+    string accesscode = 2;
+    string email = 3;
+    google.protobuf.Timestamp createdAt = 4;
+    int32 status = 5;
+  }
+  repeated Patient patients = 1;
+}
+
+message GetPatientByUserIdRequest {
+  int32 userId = 1;
+}
+
+message GetPatientByUserIdResponse {
+  message Schedule {
+    int32 startAt = 1;
+    int32 endAt = 2;
+    int32 userDay = 3;
+  }
+  message MedicalDoctor {
+    int32 accountId = 1;
+    string name = 2;
+    string email = 3;
+  }
+  int32 userId = 1;
+  string accesscode = 2;
+  string email = 3;
+  int32 createdAt = 4;
+  int32 status = 5;
+  Schedule schedule = 6;
+  MedicalDoctor medicalDoctor = 7;
+}
+
+message GetPatientsBySiteIdRequest {
+  int32 siteId = 1[(validate.rules).int32 = {gt: 0}];
+  string accesscode = 2;
+  string email = 3;
+  int32 limit = 4;
+  int32 page = 5;
+}
+
+message GetPatientsBySiteIdResponse {
+  message Patient {
+    int32 userId = 1;
+    string accesscode = 2;
+    string email = 3;
+    int32 createdAt = 4;
+    int32 status = 5;
+  }
+  message UnregisteredAccesscode {
+    string accesscode = 1;
+    string email = 2;
+    int32 accesscodeCreatedAt = 3;
+  }
+  repeated UnregisteredAccesscode unregistered = 1;
+  repeated Patient patients = 2;
+}
+
+message GetPatientMedicalRecordsByUserIdRequest {
+  int32 userId= 1[(validate.rules).int32.gt = 0];
+  int64 startDate = 2;
+  int64 endDate = 3;
+}
+
+message DiaryItemAnswers {
+  int32 itemId = 1;
+  repeated DiaryItemAnswer itemAnswers = 2;
+}
+
+message DiaryItemAnswer {
+  int32 itemAnswerId = 1;
+  string itemAnswerText = 2;
+  google.protobuf.Struct itemAnswerData = 3;
+  int32 optionId = 4;
+  string optionTitle = 5;
+  string optionDescription = 6;
+  google.protobuf.Struct optionData = 7;
+}
+
+message GetPatientMedicalRecordsByUserIdRequestResponse {
+  message Diary {
+    int32 date = 1;
+    int32 answerId = 2;
+    int32 diaryId = 3;
+    repeated DiaryItemAnswers items = 4;
+  }
+  message Lessons {
+    message Core {
+      int32 courseId = 1;
+      string progress = 2;
+    }
+    message Elective {
+      message Lesson {
+        string sessionName = 1;
+        int32 sessionOrder = 2;
+        string lessonName = 3;
+        int32 lessonId = 4;
+        int32 lessonOrder = 5;
+      }
+      int32 courseId = 1;
+      int32 count = 2;
+      repeated Lesson data = 3;
+    }
+    Core core = 1;
+    Elective elective = 2;
+  }
+  message Questionnaire {
+    int32 answerCount = 1;
+  }
+  message MedicalNote {
+    int32 id = 1;
+    string note = 2;
+    int32 createdAt = 3;
+    int32 updatedAt = 4;
+  }
+  message Data {
+    int32 date = 1;
+    repeated Diary diaries = 2;
+    Lessons lessons = 3;
+    Questionnaire questionnaires = 4;
+    repeated MedicalNote medicalNotes = 5;
+  }
+  message PeriodOfDates {
+    int32 start = 1;
+    int32 end = 2;
+  }
+  PeriodOfDates periodOfDates = 1;
+  repeated Data data = 2;
+}
+
+message GetDropoutPatientsRequest {
+  int32 siteId = 1;
+}
+
+message GetDropoutPatientsResponse {
+  message Patient {
+    int32 userId = 1;
+    string accesscode = 2;
+    string email = 3;
+    int32 nthDay = 4;
+    int32 status = 5;
+  }
+  int32 count = 1;
+  repeated Patient data = 2;
+}
+
+message GetPatientsRequest {
+  int32 limit = 1;
+  int32 page = 2;
+  string sortBy = 3;
+  string asc = 4;
+  int32 siteId = 5;
+  string accesscode = 6;
+  string email = 7;
+  int32 status = 8;
+}
+
+message GetPatientsResponse {
+  message Patient {
+    int32 userId = 1;
+    string accesscode = 2;
+    string email = 3;
+    int32 status = 4;
+    int32 days = 5;
+    int32 week = 6;
+    int32 startedAt = 7;
+    int32 groupId = 8;
+    int32 siteId = 9;
+  }
+  int32 totalCount = 1;
+  int32 page = 2;
+  int32 count = 3;
+  repeated Patient patients = 4;
+}
+
+message GetPatientOverviewRequest {
+  int32 userId = 1;
+  string accesscode = 2;
+}
+
+message GetPatientOverviewResponse {
+  message Visit {
+    int32 id = 1;
+    int32 remainingDays = 2;
+    int32 status = 3;
+    string note = 4;
+  }
+  message Lesson {
+    int32 doneCount = 1;
+    int32 totalCount = 2;
+  }
+  message MedicalDoctor {
+    int32 accountId = 1;
+    string name = 2;
+    string email = 3;
+  }
+  message StatusNote {
+    int32 type = 1;
+    string note = 2;
+  }
+  string accesscode = 1;
+  int32 userId = 2;
+  string email = 3;
+  int32 status = 4;
+  int32 groupId = 5;
+  int32 siteId = 6;
+  int32 startedAt = 7;
+  int32 nthDay = 9;
+  int32 appAccessDays = 10;
+  int32 diaryDoneCount = 11;
+  repeated Visit visits = 12;
+  StatusNote statusNote = 13;
+  Lesson lessons = 14;
+  MedicalDoctor medicalDoctor = 15;
+}
+
+message GetPatientClinicalRecordsByUserIdRequest {
+  int32 userId = 1[(validate.rules).int32.gt = 0];
+}
+
+message GetPatientClinicalRecordsByUserIdResponse {
+  message Data {
+    string date = 1;
+    int32 nth = 2;
+    int32 week = 3;
+    bool access = 4;
+    int32 userDiaryCount = 5;
+    string note = 6;
+  }
+  int32 count = 1;
+  repeated Data data = 2;
+}
+
+message DisablePatientByUserIdRequest {
+  int32 userId = 1[(validate.rules).int32.gt = 0];
+  int32 status = 2[(validate.rules).int32.gt = 0];
+  string note = 3;
+}
+
+message GetPatientsByVisitIdRequest {
+  int32 visitId = 1[(validate.rules).int32.gt = 0];
+  int32 siteId = 2;
+}
+
+message GetPatientsByVisitIdResponse {
+  message User {
+    int32 userId = 1;
+    string accesscode = 2;
+    string email = 3;
+    int32 createdAt = 4;
+    int32 userStatus = 9;
+    int32 groupId = 10;
+    int32 nthDay = 5;
+    int32 visitAt = 6;
+    int32 visitStatus = 7;
+    string visitNote = 8;
+  }
+  int32 count = 1;
+  repeated User users = 2;
+}

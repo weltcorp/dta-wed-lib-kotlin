@@ -1,0 +1,79 @@
+syntax = "proto3";
+package dta.wed.api.v1.configs;
+
+option go_package = "github.com/weltcorp/dta-wed-api/internal/proto/dta-wed-api/v1/configs";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+service ConfigsData {
+  rpc CreateUserDbmPermissionLog(CreateUserDbmPermissionLogRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v1/dbm/logs/users/{userId}/permissions", body: "*" };
+  }
+  rpc UpsertUserConfig(UpsertUserConfigRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { put: "/v1/configs/users/{userId}", body: "*" };
+  }
+  rpc GetUserConfigPushNotification(GetUserConfigPushNotificationRequest) returns (GetUserConfigPushNotificationResponse) {
+    option (google.api.http) = { get: "/v1/configs/users/{userId}/pushNotification" };
+  }
+  rpc UpsertUserFcmToken(UpsertUserFcmTokenRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { put: "/v1/fcmTokens/users/{userId}", body: "*" };
+  }
+  rpc GetUserFcmToken(GetUserFcmTokenRequest) returns (GetUserFcmTokenResponse) {
+    option (google.api.http) = { get: "/v1/fcmTokens/users/{userId}" };
+  }
+  rpc CreateIssueAndEmailAssignee(CreateIssueAndEmailAssigneeRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v1/issues", body: "*" };
+  }
+}
+
+message CreateUserDbmPermissionLogRequest {
+  int32 userId = 1[(validate.rules).int32 = {gt: 0}];
+  string deviceName = 2[(validate.rules).string = {min_len: 1}];
+  string platform = 3[(validate.rules).string = {min_len: 1}];
+  google.protobuf.Struct permissions = 4;
+}
+
+message UpsertUserConfigRequest {
+  int32 userId = 1[(validate.rules).int32 = {gt: 0}];
+  optional bool inAppPushNotification = 2;
+  optional bool appPushNotification = 3;
+  optional string platform = 4;
+  optional string deviceName = 5;
+  optional string osVersion = 6;
+  optional string appVersion = 7;
+  optional string webAppVersion = 8;
+}
+
+message GetUserConfigPushNotificationRequest {
+  int32 userId = 1[(validate.rules).int32 = {gt: 0}];
+}
+
+message GetUserConfigPushNotificationResponse {
+  int32 userId = 1;
+  bool inAppPushNotification = 2;
+}
+
+message UpsertUserFcmTokenRequest {
+  int32 userId = 1;
+  string os = 2;
+  string fcmToken = 3;
+}
+
+message CreateIssueAndEmailAssigneeRequest {
+  int32 userId = 1[(validate.rules).int32 = {gt:0}];
+  string subject = 2[(validate.rules).string = {min_len: 1}];
+  string content = 3[(validate.rules).string = {min_len: 1}];
+}
+
+message GetUserFcmTokenRequest {
+  int32 userId = 1;
+}
+
+message GetUserFcmTokenResponse {
+  int32 userId = 1;
+  string os = 2;
+  string fcmToken = 3;
+}

@@ -1,0 +1,123 @@
+syntax = "proto3";
+package dta.wed.api.v2.diaries;
+
+option go_package = "github.com/weltcorp/dta-wed-api/internal/proto/dta-wed-api/v2/diaries";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+service DiariesData {
+  rpc CreateDiary(CreateDiaryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v2/diaries", body: "*" };
+  }
+  rpc UpdateDiary(UpdateDiaryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { patch: "/v2/diaries/{id}", body: "*" };
+  }
+  rpc GetDiaries(GetDiariesRequest) returns (GetDiariesResponse) {
+    option (google.api.http) = { get: "/v2/diaries" };
+  }
+}
+
+message DiaryFood {
+  optional string text = 1;
+  repeated string uriList = 2;
+}
+
+message DiaryFeelingEvent {
+  int32 id = 1 [(validate.rules).int32 = {gte: 1, lte: 7}];
+  optional string text = 2;
+}
+
+message DiaryFeeling {
+  int32 score = 1 [(validate.rules).int32 = {gte: 1, lte: 5}];
+  optional DiaryFeelingEvent event = 2;
+}
+
+message DiaryFeelingScore {
+  optional int32 score = 1 [(validate.rules).int32 = {gte: 1, lte: 5}];
+  optional int32 event = 2;
+}
+
+message DiarySchedule {
+  bool enabled = 1;
+  string time = 2;
+}
+
+message DiaryMeta {
+  int32 id = 1;
+  int32 type = 2 [(validate.rules).int32 = {gte: 1, lte: 7}];
+  string title = 3;
+  string description = 4;
+  optional int32 emotion = 5;
+  optional DiarySchedule schedule = 6;
+  int32 date = 7;
+}
+
+message DiaryData {
+  int32 type = 2 [(validate.rules).int32 = {gte: 1, lte: 7}];
+  optional string time = 5;
+  repeated int32 who = 6;
+  optional int32 where = 7;
+  optional DiaryFood food = 8;
+  optional int32 beforeHungryScore = 9 [(validate.rules).int32 = {gte: 1, lte: 5}];
+  optional int32 afterHungryScore = 10 [(validate.rules).int32 = {gte: 1, lte: 5}];
+  optional DiaryFeeling feeling = 11;
+  repeated int32 mistakes = 12;
+  bool isSkip = 13;
+}
+
+message Diary {
+  optional DiaryMeta meta = 1;
+  optional DiaryData data = 2;
+}
+
+message CreateDiaryRequest {
+  int64 userId = 1;
+  int32 date = 2;
+  optional DiaryData data = 3;
+}
+
+message UpdateDiaryRequest {
+  int32 id = 1;
+  optional DiaryData data = 2;
+}
+
+message GetDiariesRequest {
+  int64 userId = 1;
+  int32 date = 2;
+  int32 startDate = 3;
+  int32 endDate = 4;
+}
+
+message GetDiariesResponse {
+  int32 startDate = 1;
+  int32 endDate = 2;
+  repeated Diary diaries = 3;
+}
+
+
+
+
+
+
+
+//message DiaryWho {
+//  optional bool alone = 1;
+//  optional bool family = 2;
+//  optional bool friend = 3;
+//  optional bool Colleague = 4;
+//  optional bool lover = 5;
+//  optional bool other = 6;
+//}
+//
+//message DiaryWhere {
+//  oneof where {
+//    bool homeTable = 1;
+//    bool homeOther = 2;
+//    bool schoolOffice = 3;
+//    bool restaurant = 4;
+//    bool other = 5;
+//  }
+//}

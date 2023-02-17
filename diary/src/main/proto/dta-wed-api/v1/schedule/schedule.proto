@@ -1,0 +1,37 @@
+syntax = "proto3";
+package dta.wed.api.v1.schedule;
+
+option go_package = "github.com/weltcorp/dta-wed-api/internal/proto/dta-wed-api/v1/schedule";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service ScheduleData {
+  rpc UpsertUserDiarySchedule(UpsertUserDiaryScheduleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { put: "/v1/schedule/actions/diaries/{diaryId}/users/{userId}", body: "*" };
+  }
+  rpc GetUserSchedule(GetUserScheduleRequest) returns (GetUserScheduleResponse) {
+    option (google.api.http) = { get: "/v1/schedule/users/{userId}" };
+  }
+}
+
+message UpsertUserDiaryScheduleRequest {
+  int32 diaryId = 1[(validate.rules).int32 = {gt:0}];
+  int32 userId = 2[(validate.rules).int32 = {gt:0}];
+  optional string when = 3;
+  optional bool enabled = 4;
+}
+
+message GetUserScheduleRequest {
+  int32 userId = 1[(validate.rules).int32 = {gt: 0}];
+}
+
+message GetUserScheduleResponse {
+  int32 status = 1;
+  repeated string days = 2;
+  int32 date = 3;
+  int32 nth = 4;
+  int32 startDate = 5;
+  int32 endDate = 6;
+}

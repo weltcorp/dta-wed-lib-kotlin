@@ -1,0 +1,117 @@
+syntax = "proto3";
+package dta.wed.api.v1.questionnaires;
+
+option go_package = "github.com/weltcorp/dta-wed-api/internal/proto/dta-wed-api/v1/wedQuestionnaires";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+service QuestionnairesData {
+  rpc GetQuestionnaireItemsByQuestionnaireId(GetQuestionnaireItemsByQuestionnaireIdRequest) returns (GetQuestionnaireItemsByQuestionnaireIdResponse) {
+    option (google.api.http) = { get: "/v1/questionnaires/{questionnaireId}" };
+  }
+  rpc CreateQuestionnaireAnswers(CreateQuestionnaireAnswersRequest) returns (CreateQuestionnaireAnswersResponse) {
+    option (google.api.http) = { post: "/v1/answers/questionnaires/{questionnaireId}/users/{userId}", body: "*" };
+  }
+  rpc GetQuestionnaireAnswersByUserId(GetQuestionnaireAnswersByUserIdRequest) returns (GetQuestionnaireAnswersByUserIdResponse) {
+    option (google.api.http) = { get: "/v1/questionnaires/answers/users/{userId}" };
+  }
+  rpc GetQuestionnaireAnswersByAnswerId(GetQuestionnaireAnswersByAnswerIdRequest) returns (GetQuestionnaireAnswersByAnswerIdResponse) {
+    option (google.api.http) = { get: "/v1/questionnaires/answers/{answerId}" };
+  }
+  rpc DeleteQuestionnaireAnswersByAnswerId(DeleteQuestionnaireAnswersByAnswerIdRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { delete: "/v1/questionnaires/answers/{answerId}" };
+  }
+}
+
+message GetQuestionnaireAnswersByUserIdRequest {
+  int32 userId = 1;
+  int32 limit = 2;
+  int32 page = 3;
+  string orderBy = 4;
+  string asc = 5;
+}
+
+message QuestionnaireAnswerSummary {
+  int32 questionnaireId = 1;
+  string date = 2;
+  int32 answerId = 3;
+}
+
+message GetQuestionnaireAnswersByUserIdResponse {
+  int32 totalCount = 1;
+  int32 page = 2;
+  int32 count = 3;
+  repeated QuestionnaireAnswerSummary data = 4;
+}
+
+message QuestionnaireAnswerOption {
+  int32 questionnaireOptionId = 1;
+  string answerText = 2;
+  string data = 3;
+}
+message QuestionnaireAnswer {
+  int32 questionnaireItemId = 1;
+  repeated QuestionnaireAnswerOption options = 2;
+}
+message CreateQuestionnaireAnswersRequest {
+  int32 questionnaireId = 1[(validate.rules).int32.gt = 0];
+  int32 userId = 2[(validate.rules).int32.gt = 0];
+  int32 date = 3[(validate.rules).int32.gt = 0];
+  repeated QuestionnaireAnswer answers = 4;
+}
+
+message CreateQuestionnaireAnswersResponse {
+}
+
+message GetQuestionnaireItemsByQuestionnaireIdRequest {
+  int32 questionnaireId = 1;
+}
+
+message QuestionnaireItem {
+  int32 id = 1;
+  string title = 2;
+  string description = 3;
+  bool required = 4;
+  int32 status = 5;
+  int32 itemTypeId = 6;
+  int32 order = 7;
+  repeated QuestionnaireOption options = 10;
+}
+
+message QuestionnaireOption {
+  int32 id = 1;
+  string title = 2;
+  int32 order = 3;
+  google.protobuf.Struct data = 4;
+}
+
+message GetQuestionnaireItemsByQuestionnaireIdResponse {
+  repeated QuestionnaireItem items = 1;
+}
+
+message GetQuestionnaireAnswersByAnswerIdRequest {
+  int32 answerId = 1;
+}
+
+message QuestionnaireItemAnswers {
+  int32 itemId = 1;
+  repeated QuestionnaireItemAnswer itemAnswers = 2;
+}
+message QuestionnaireItemAnswer {
+  int32 optionId = 1;
+  string itemAnswerText = 2;
+  google.protobuf.Struct itemAnswerData = 3;
+  int32 itemAnswerId = 4;
+}
+message GetQuestionnaireAnswersByAnswerIdResponse {
+  string date = 1;
+  int32 answerId = 2;
+  repeated QuestionnaireItemAnswers items = 3;
+}
+
+message DeleteQuestionnaireAnswersByAnswerIdRequest {
+  int32 answerId = 1;
+}
