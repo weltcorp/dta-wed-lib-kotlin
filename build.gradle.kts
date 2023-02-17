@@ -38,38 +38,21 @@ application {
     mainClass.set("MainKt")
 }
 
-//publishing {
-//    publications {
-////        mavenJava(MavenPublication) {
-////            from components.java
-////
-////            groupId = 'com.github.WonJoong'
-////            artifactId = 'kodi'
-////            version = '0.2.1'
-////        }
-//        maven(MavenPublication) {
-//            groupId = "com.weltcorp.dta.wed.lib"
-//            artifactId = "lib"
-//            version = "1.1"
+publishing {
+    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
 //
-//            from(components["java"])
+//            groupId = 'com.github.WonJoong'
+//            artifactId = 'kodi'
+//            version = '0.2.1'
 //        }
-//    }
-//}
+        create<MavenPublication>("maven") {
+            groupId = "com.github.weltcorp"
+            artifactId = "dta-wed-lib-kotlin"
+            version = "0.1.2"
 
-//publishing {
-////    repositories {
-////        maven {
-////            // change to point to your repo, e.g. http://my.org/repo
-////            url = uri("$buildDir/repo")
-////        }
-////    }
-//    publications {
-//        register("mavenJava", MavenPublication::class) {
-//            from(components["java"])
-//            groupId = "com.weltcorp.dta.wed.lib"
-//            artifactId = "lib"
-//            version = "1.1"
-//        }
-//    }
-//}
+            from(components["java"])
+        }
+    }
+}
