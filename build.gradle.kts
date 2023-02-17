@@ -12,6 +12,9 @@ allprojects {
         mavenCentral()
     }
 }
+dependencies {
+    implementation(project(mapOf("path" to ":diary")))
+}
 
 subprojects {
     apply(plugin = "kotlin")
@@ -26,9 +29,6 @@ subprojects {
         testImplementation(kotlin("test"))
     }
 }
-
-
-
 
 kotlin {
     jvmToolchain(8)
