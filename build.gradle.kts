@@ -31,21 +31,38 @@ application {
     mainClass.set("MainKt")
 }
 
-publishing {
-    publications {
-//        mavenJava(MavenPublication) {
-//            from components.java
+//publishing {
+//    publications {
+////        mavenJava(MavenPublication) {
+////            from components.java
+////
+////            groupId = 'com.github.WonJoong'
+////            artifactId = 'kodi'
+////            version = '0.2.1'
+////        }
+//        maven(MavenPublication) {
+//            groupId = "com.weltcorp.dta.wed.lib"
+//            artifactId = "lib"
+//            version = "1.1"
 //
-//            groupId = 'com.github.WonJoong'
-//            artifactId = 'kodi'
-//            version = '0.2.1'
+//            from(components["java"])
 //        }
-        create<MavenPublication>("maven") {
+//    }
+//}
+
+publishing {
+//    repositories {
+//        maven {
+//            // change to point to your repo, e.g. http://my.org/repo
+//            url = uri("$buildDir/repo")
+//        }
+//    }
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            from(components["java"])
             groupId = "com.weltcorp.dta.wed.lib"
             artifactId = "lib"
             version = "1.1"
-
-            from(components["java"])
         }
     }
 }
