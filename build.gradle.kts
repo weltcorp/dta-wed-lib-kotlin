@@ -2,6 +2,7 @@
 plugins {
     kotlin("jvm") version "1.8.0"
     application
+    `maven-publish`
 }
 
 group = "org.example"
@@ -28,4 +29,23 @@ kotlin {
 
 application {
     mainClass.set("MainKt")
+}
+
+publishing {
+    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//
+//            groupId = 'com.github.WonJoong'
+//            artifactId = 'kodi'
+//            version = '0.2.1'
+//        }
+        create<MavenPublication>("maven") {
+            groupId = "com.weltcorp.dta.wed.lib"
+            artifactId = "lib"
+            version = "1.1"
+
+            from(components["java"])
+        }
+    }
 }
