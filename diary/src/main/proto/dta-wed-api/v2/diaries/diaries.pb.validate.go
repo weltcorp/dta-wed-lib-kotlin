@@ -160,10 +160,10 @@ func (m *DiaryFeelingEvent) validate(all bool) error {
 
 	var errors []error
 
-	if val := m.GetId(); val < 1 || val > 7 {
+	if val := m.GetId(); val < 0 || val > 6 {
 		err := DiaryFeelingEventValidationError{
 			field:  "Id",
-			reason: "value must be inside range [1, 7]",
+			reason: "value must be inside range [0, 6]",
 		}
 		if !all {
 			return err
@@ -647,10 +647,10 @@ func (m *DiaryMeta) validate(all bool) error {
 
 	// no validation rules for Id
 
-	if val := m.GetType(); val < 1 || val > 7 {
+	if val := m.GetType(); val < 0 || val > 6 {
 		err := DiaryMetaValidationError{
 			field:  "Type",
-			reason: "value must be inside range [1, 7]",
+			reason: "value must be inside range [0, 6]",
 		}
 		if !all {
 			return err
@@ -800,10 +800,10 @@ func (m *DiaryData) validate(all bool) error {
 
 	var errors []error
 
-	if val := m.GetType(); val < 1 || val > 7 {
+	if val := m.GetType(); val < 0 || val > 6 {
 		err := DiaryDataValidationError{
 			field:  "Type",
-			reason: "value must be inside range [1, 7]",
+			reason: "value must be inside range [0, 6]",
 		}
 		if !all {
 			return err
@@ -856,10 +856,10 @@ func (m *DiaryData) validate(all bool) error {
 
 	if m.BeforeHungryScore != nil {
 
-		if val := m.GetBeforeHungryScore(); val < 1 || val > 5 {
+		if val := m.GetBeforeHungryScore(); val < 0 || val > 4 {
 			err := DiaryDataValidationError{
 				field:  "BeforeHungryScore",
-				reason: "value must be inside range [1, 5]",
+				reason: "value must be inside range [0, 4]",
 			}
 			if !all {
 				return err
@@ -871,10 +871,10 @@ func (m *DiaryData) validate(all bool) error {
 
 	if m.AfterHungryScore != nil {
 
-		if val := m.GetAfterHungryScore(); val < 1 || val > 5 {
+		if val := m.GetAfterHungryScore(); val < 0 || val > 4 {
 			err := DiaryDataValidationError{
 				field:  "AfterHungryScore",
-				reason: "value must be inside range [1, 5]",
+				reason: "value must be inside range [0, 4]",
 			}
 			if !all {
 				return err

@@ -23,6 +23,7 @@ tasks.getByName<Test>("test") {
 val grpcVersion = "3.19.4"
 val grpcKotlinVersion = "1.2.1"
 val grpcProtoVersion = "1.44.1"
+val rxjavaVersion = "3.0.11"
 
 dependencies{
     implementation("io.grpc:grpc-core:$grpcProtoVersion")
@@ -32,6 +33,7 @@ dependencies{
     implementation("io.grpc:grpc-protobuf:$grpcProtoVersion")
     implementation("com.google.protobuf:protobuf-kotlin:$grpcVersion")
     implementation("com.google.protobuf:protobuf-java:$grpcVersion")
+    implementation("io.reactivex.rxjava3:rxjava:$rxjavaVersion")
 }
 
 sourceSets{

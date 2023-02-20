@@ -12,8 +12,12 @@ allprojects {
         mavenCentral()
     }
 }
+
+val rxjavaVersion = "3.0.11"
+
 dependencies {
     implementation(project(mapOf("path" to ":diary")))
+    implementation("io.reactivex.rxjava3:rxjava:$rxjavaVersion")
 }
 
 subprojects {
