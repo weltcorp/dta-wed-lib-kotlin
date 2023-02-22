@@ -143,8 +143,6 @@ public struct Dta_Wed_Api_V2_Diaries_DiaryMeta {
 
   public var type: Int32 = 0
 
-  public var title: String = String()
-
   public var description_p: String = String()
 
   public var emotion: Int32 {
@@ -164,6 +162,8 @@ public struct Dta_Wed_Api_V2_Diaries_DiaryMeta {
   public var hasSchedule: Bool {return self._schedule != nil}
   /// Clears the value of `schedule`. Subsequent reads from it will return its default value.
   public mutating func clearSchedule() {self._schedule = nil}
+
+  public var dateString: String = String()
 
   public var date: Int32 = 0
 
@@ -339,11 +339,52 @@ public struct Dta_Wed_Api_V2_Diaries_GetDiariesRequest {
 
   public var userID: Int64 = 0
 
-  public var date: Int32 = 0
+  public var date: Int32 {
+    get {return _date ?? 0}
+    set {_date = newValue}
+  }
+  /// Returns true if `date` has been explicitly set.
+  public var hasDate: Bool {return self._date != nil}
+  /// Clears the value of `date`. Subsequent reads from it will return its default value.
+  public mutating func clearDate() {self._date = nil}
 
-  public var startDate: Int32 = 0
+  public var startDate: Int32 {
+    get {return _startDate ?? 0}
+    set {_startDate = newValue}
+  }
+  /// Returns true if `startDate` has been explicitly set.
+  public var hasStartDate: Bool {return self._startDate != nil}
+  /// Clears the value of `startDate`. Subsequent reads from it will return its default value.
+  public mutating func clearStartDate() {self._startDate = nil}
 
-  public var endDate: Int32 = 0
+  public var endDate: Int32 {
+    get {return _endDate ?? 0}
+    set {_endDate = newValue}
+  }
+  /// Returns true if `endDate` has been explicitly set.
+  public var hasEndDate: Bool {return self._endDate != nil}
+  /// Clears the value of `endDate`. Subsequent reads from it will return its default value.
+  public mutating func clearEndDate() {self._endDate = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _date: Int32? = nil
+  fileprivate var _startDate: Int32? = nil
+  fileprivate var _endDate: Int32? = nil
+}
+
+public struct Dta_Wed_Api_V2_Diaries_DiariesPerDay {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var dateUnix: Int32 = 0
+
+  public var dateString: String = String()
+
+  public var diaries: [Dta_Wed_Api_V2_Diaries_Diary] = []
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -355,11 +396,11 @@ public struct Dta_Wed_Api_V2_Diaries_GetDiariesResponse {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var startDate: Int32 = 0
+  public var startDate: Int64 = 0
 
-  public var endDate: Int32 = 0
+  public var endDate: Int64 = 0
 
-  public var diaries: [Dta_Wed_Api_V2_Diaries_Diary] = []
+  public var diariesPerDays: [Dta_Wed_Api_V2_Diaries_DiariesPerDay] = []
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -378,6 +419,7 @@ extension Dta_Wed_Api_V2_Diaries_Diary: @unchecked Sendable {}
 extension Dta_Wed_Api_V2_Diaries_CreateDiaryRequest: @unchecked Sendable {}
 extension Dta_Wed_Api_V2_Diaries_UpdateDiaryRequest: @unchecked Sendable {}
 extension Dta_Wed_Api_V2_Diaries_GetDiariesRequest: @unchecked Sendable {}
+extension Dta_Wed_Api_V2_Diaries_DiariesPerDay: @unchecked Sendable {}
 extension Dta_Wed_Api_V2_Diaries_GetDiariesResponse: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
@@ -596,10 +638,10 @@ extension Dta_Wed_Api_V2_Diaries_DiaryMeta: SwiftProtobuf.Message, SwiftProtobuf
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "id"),
     2: .same(proto: "type"),
-    3: .same(proto: "title"),
-    4: .same(proto: "description"),
-    5: .same(proto: "emotion"),
-    6: .same(proto: "schedule"),
+    3: .same(proto: "description"),
+    4: .same(proto: "emotion"),
+    5: .same(proto: "schedule"),
+    6: .same(proto: "dateString"),
     7: .same(proto: "date"),
   ]
 
@@ -611,10 +653,10 @@ extension Dta_Wed_Api_V2_Diaries_DiaryMeta: SwiftProtobuf.Message, SwiftProtobuf
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularInt32Field(value: &self.id) }()
       case 2: try { try decoder.decodeSingularInt32Field(value: &self.type) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self.title) }()
-      case 4: try { try decoder.decodeSingularStringField(value: &self.description_p) }()
-      case 5: try { try decoder.decodeSingularInt32Field(value: &self._emotion) }()
-      case 6: try { try decoder.decodeSingularMessageField(value: &self._schedule) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.description_p) }()
+      case 4: try { try decoder.decodeSingularInt32Field(value: &self._emotion) }()
+      case 5: try { try decoder.decodeSingularMessageField(value: &self._schedule) }()
+      case 6: try { try decoder.decodeSingularStringField(value: &self.dateString) }()
       case 7: try { try decoder.decodeSingularInt32Field(value: &self.date) }()
       default: break
       }
@@ -632,18 +674,18 @@ extension Dta_Wed_Api_V2_Diaries_DiaryMeta: SwiftProtobuf.Message, SwiftProtobuf
     if self.type != 0 {
       try visitor.visitSingularInt32Field(value: self.type, fieldNumber: 2)
     }
-    if !self.title.isEmpty {
-      try visitor.visitSingularStringField(value: self.title, fieldNumber: 3)
-    }
     if !self.description_p.isEmpty {
-      try visitor.visitSingularStringField(value: self.description_p, fieldNumber: 4)
+      try visitor.visitSingularStringField(value: self.description_p, fieldNumber: 3)
     }
     try { if let v = self._emotion {
-      try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
+      try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
     } }()
     try { if let v = self._schedule {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
     } }()
+    if !self.dateString.isEmpty {
+      try visitor.visitSingularStringField(value: self.dateString, fieldNumber: 6)
+    }
     if self.date != 0 {
       try visitor.visitSingularInt32Field(value: self.date, fieldNumber: 7)
     }
@@ -653,10 +695,10 @@ extension Dta_Wed_Api_V2_Diaries_DiaryMeta: SwiftProtobuf.Message, SwiftProtobuf
   public static func ==(lhs: Dta_Wed_Api_V2_Diaries_DiaryMeta, rhs: Dta_Wed_Api_V2_Diaries_DiaryMeta) -> Bool {
     if lhs.id != rhs.id {return false}
     if lhs.type != rhs.type {return false}
-    if lhs.title != rhs.title {return false}
     if lhs.description_p != rhs.description_p {return false}
     if lhs._emotion != rhs._emotion {return false}
     if lhs._schedule != rhs._schedule {return false}
+    if lhs.dateString != rhs.dateString {return false}
     if lhs.date != rhs.date {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -935,35 +977,83 @@ extension Dta_Wed_Api_V2_Diaries_GetDiariesRequest: SwiftProtobuf.Message, Swift
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularInt64Field(value: &self.userID) }()
-      case 2: try { try decoder.decodeSingularInt32Field(value: &self.date) }()
-      case 3: try { try decoder.decodeSingularInt32Field(value: &self.startDate) }()
-      case 4: try { try decoder.decodeSingularInt32Field(value: &self.endDate) }()
+      case 2: try { try decoder.decodeSingularInt32Field(value: &self._date) }()
+      case 3: try { try decoder.decodeSingularInt32Field(value: &self._startDate) }()
+      case 4: try { try decoder.decodeSingularInt32Field(value: &self._endDate) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.userID != 0 {
       try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 1)
     }
-    if self.date != 0 {
-      try visitor.visitSingularInt32Field(value: self.date, fieldNumber: 2)
-    }
-    if self.startDate != 0 {
-      try visitor.visitSingularInt32Field(value: self.startDate, fieldNumber: 3)
-    }
-    if self.endDate != 0 {
-      try visitor.visitSingularInt32Field(value: self.endDate, fieldNumber: 4)
-    }
+    try { if let v = self._date {
+      try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
+    } }()
+    try { if let v = self._startDate {
+      try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
+    } }()
+    try { if let v = self._endDate {
+      try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Dta_Wed_Api_V2_Diaries_GetDiariesRequest, rhs: Dta_Wed_Api_V2_Diaries_GetDiariesRequest) -> Bool {
     if lhs.userID != rhs.userID {return false}
-    if lhs.date != rhs.date {return false}
-    if lhs.startDate != rhs.startDate {return false}
-    if lhs.endDate != rhs.endDate {return false}
+    if lhs._date != rhs._date {return false}
+    if lhs._startDate != rhs._startDate {return false}
+    if lhs._endDate != rhs._endDate {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Dta_Wed_Api_V2_Diaries_DiariesPerDay: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".DiariesPerDay"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "dateUnix"),
+    2: .same(proto: "dateString"),
+    3: .same(proto: "diaries"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt32Field(value: &self.dateUnix) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.dateString) }()
+      case 3: try { try decoder.decodeRepeatedMessageField(value: &self.diaries) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.dateUnix != 0 {
+      try visitor.visitSingularInt32Field(value: self.dateUnix, fieldNumber: 1)
+    }
+    if !self.dateString.isEmpty {
+      try visitor.visitSingularStringField(value: self.dateString, fieldNumber: 2)
+    }
+    if !self.diaries.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.diaries, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Dta_Wed_Api_V2_Diaries_DiariesPerDay, rhs: Dta_Wed_Api_V2_Diaries_DiariesPerDay) -> Bool {
+    if lhs.dateUnix != rhs.dateUnix {return false}
+    if lhs.dateString != rhs.dateString {return false}
+    if lhs.diaries != rhs.diaries {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -974,7 +1064,7 @@ extension Dta_Wed_Api_V2_Diaries_GetDiariesResponse: SwiftProtobuf.Message, Swif
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "startDate"),
     2: .same(proto: "endDate"),
-    3: .same(proto: "diaries"),
+    3: .same(proto: "diariesPerDays"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -983,9 +1073,9 @@ extension Dta_Wed_Api_V2_Diaries_GetDiariesResponse: SwiftProtobuf.Message, Swif
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt32Field(value: &self.startDate) }()
-      case 2: try { try decoder.decodeSingularInt32Field(value: &self.endDate) }()
-      case 3: try { try decoder.decodeRepeatedMessageField(value: &self.diaries) }()
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.startDate) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.endDate) }()
+      case 3: try { try decoder.decodeRepeatedMessageField(value: &self.diariesPerDays) }()
       default: break
       }
     }
@@ -993,13 +1083,13 @@ extension Dta_Wed_Api_V2_Diaries_GetDiariesResponse: SwiftProtobuf.Message, Swif
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     if self.startDate != 0 {
-      try visitor.visitSingularInt32Field(value: self.startDate, fieldNumber: 1)
+      try visitor.visitSingularInt64Field(value: self.startDate, fieldNumber: 1)
     }
     if self.endDate != 0 {
-      try visitor.visitSingularInt32Field(value: self.endDate, fieldNumber: 2)
+      try visitor.visitSingularInt64Field(value: self.endDate, fieldNumber: 2)
     }
-    if !self.diaries.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.diaries, fieldNumber: 3)
+    if !self.diariesPerDays.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.diariesPerDays, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -1007,7 +1097,7 @@ extension Dta_Wed_Api_V2_Diaries_GetDiariesResponse: SwiftProtobuf.Message, Swif
   public static func ==(lhs: Dta_Wed_Api_V2_Diaries_GetDiariesResponse, rhs: Dta_Wed_Api_V2_Diaries_GetDiariesResponse) -> Bool {
     if lhs.startDate != rhs.startDate {return false}
     if lhs.endDate != rhs.endDate {return false}
-    if lhs.diaries != rhs.diaries {return false}
+    if lhs.diariesPerDays != rhs.diariesPerDays {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

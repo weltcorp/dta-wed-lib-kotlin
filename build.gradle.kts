@@ -14,10 +14,13 @@ allprojects {
 }
 
 val rxjavaVersion = "3.0.11"
+val grpcVersion = "3.19.4"
 
 dependencies {
     implementation(project(mapOf("path" to ":diary")))
     implementation("io.reactivex.rxjava3:rxjava:$rxjavaVersion")
+    implementation("com.google.protobuf:protobuf-kotlin:$grpcVersion")
+    implementation("com.google.protobuf:protobuf-java:$grpcVersion")
 }
 
 subprojects {

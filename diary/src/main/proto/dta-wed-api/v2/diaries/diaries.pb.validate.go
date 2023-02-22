@@ -658,9 +658,9 @@ func (m *DiaryMeta) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Title
-
 	// no validation rules for Description
+
+	// no validation rules for DateString
 
 	// no validation rules for Date
 
@@ -1458,11 +1458,17 @@ func (m *GetDiariesRequest) validate(all bool) error {
 
 	// no validation rules for UserId
 
-	// no validation rules for Date
+	if m.Date != nil {
+		// no validation rules for Date
+	}
 
-	// no validation rules for StartDate
+	if m.StartDate != nil {
+		// no validation rules for StartDate
+	}
 
-	// no validation rules for EndDate
+	if m.EndDate != nil {
+		// no validation rules for EndDate
+	}
 
 	if len(errors) > 0 {
 		return GetDiariesRequestMultiError(errors)
@@ -1544,6 +1550,144 @@ var _ interface {
 	ErrorName() string
 } = GetDiariesRequestValidationError{}
 
+// Validate checks the field values on DiariesPerDay with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *DiariesPerDay) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DiariesPerDay with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in DiariesPerDayMultiError, or
+// nil if none found.
+func (m *DiariesPerDay) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DiariesPerDay) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for DateUnix
+
+	// no validation rules for DateString
+
+	for idx, item := range m.GetDiaries() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DiariesPerDayValidationError{
+						field:  fmt.Sprintf("Diaries[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DiariesPerDayValidationError{
+						field:  fmt.Sprintf("Diaries[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DiariesPerDayValidationError{
+					field:  fmt.Sprintf("Diaries[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return DiariesPerDayMultiError(errors)
+	}
+
+	return nil
+}
+
+// DiariesPerDayMultiError is an error wrapping multiple validation errors
+// returned by DiariesPerDay.ValidateAll() if the designated constraints
+// aren't met.
+type DiariesPerDayMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DiariesPerDayMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DiariesPerDayMultiError) AllErrors() []error { return m }
+
+// DiariesPerDayValidationError is the validation error returned by
+// DiariesPerDay.Validate if the designated constraints aren't met.
+type DiariesPerDayValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DiariesPerDayValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DiariesPerDayValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DiariesPerDayValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DiariesPerDayValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DiariesPerDayValidationError) ErrorName() string { return "DiariesPerDayValidationError" }
+
+// Error satisfies the builtin error interface
+func (e DiariesPerDayValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDiariesPerDay.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DiariesPerDayValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DiariesPerDayValidationError{}
+
 // Validate checks the field values on GetDiariesResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1570,7 +1714,7 @@ func (m *GetDiariesResponse) validate(all bool) error {
 
 	// no validation rules for EndDate
 
-	for idx, item := range m.GetDiaries() {
+	for idx, item := range m.GetDiariesPerDays() {
 		_, _ = idx, item
 
 		if all {
@@ -1578,7 +1722,7 @@ func (m *GetDiariesResponse) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, GetDiariesResponseValidationError{
-						field:  fmt.Sprintf("Diaries[%v]", idx),
+						field:  fmt.Sprintf("DiariesPerDays[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -1586,7 +1730,7 @@ func (m *GetDiariesResponse) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, GetDiariesResponseValidationError{
-						field:  fmt.Sprintf("Diaries[%v]", idx),
+						field:  fmt.Sprintf("DiariesPerDays[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -1595,7 +1739,7 @@ func (m *GetDiariesResponse) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return GetDiariesResponseValidationError{
-					field:  fmt.Sprintf("Diaries[%v]", idx),
+					field:  fmt.Sprintf("DiariesPerDays[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
