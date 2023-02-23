@@ -1,0 +1,106 @@
+syntax = "proto3";
+package dta.wed.api.v2.questionnaires;
+
+option go_package = "github.com/weltcorp/dta-wed-api/internal/proto/dta-wed-api/v2/questionnaires";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+service QuestionnairesData {
+  rpc CreateQuestionnaireAnswer(CreateQuestionnaireAnswerRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v2/questionnaires/answers", body: "*" };
+  }
+  rpc GetQuestionnaire(GetQuestionnaireRequest) returns (Questionnaire) {
+    option (google.api.http) = { get: "/v2/questionnaires/{questionnaireId}" };
+  }
+}
+
+message CreateQuestionnaireAnswerRequest {
+  int64 userId = 1;
+  optional QuestionnaireAnswerData data = 3;
+}
+
+message QuestionnaireAnswerData {
+  int32 date = 1;
+  int32 bodyWhere = 2;
+  int32 bodyFeel = 3;
+  int32 feelType = 4;
+  int32 conclusion = 5;
+  int32 fear = 6;
+  int32 sentence = 7;
+  optional string message = 8;
+}
+
+message GetQuestionnaireRequest {
+  int32 questionnaireId = 1;
+}
+
+message Option {
+  int32 id = 1;
+  string text = 2;
+}
+
+message BodyWhere {
+  int32 type = 2;
+  bool isRequired = 3;
+  string title = 4;
+  repeated Option options = 5;
+}
+
+message BodyFeel {
+  int32 type = 2;
+  bool isRequired = 3;
+  string title = 4;
+  repeated Option options = 5;
+}
+
+message FeelType {
+  int32 type = 2;
+  bool isRequired = 3;
+  string title = 4;
+  repeated FeelContent feelContents = 5;
+}
+
+message FeelContent {
+  int32 id = 1;
+  string text = 2;
+  Conclusion conclusion = 3;
+  Fear fear = 4;
+  Sentence sentence = 5;
+}
+
+message Conclusion {
+  int32 type = 2;
+  bool isRequired = 3;
+  string title = 4;
+  repeated Option options = 5;
+}
+
+message Fear {
+  int32 type = 2;
+  bool isRequired = 3;
+  string title = 4;
+  repeated Option options = 5;
+}
+
+message Sentence {
+  int32 type = 2;
+  bool isRequired = 3;
+  string title = 4;
+  repeated Option options = 5;
+}
+
+message Message {
+  int32 type = 2;
+  bool isRequired = 3;
+  string title = 5;
+}
+
+message Questionnaire {
+  BodyWhere bodyWhere = 1;
+  BodyFeel bodyFeel = 2;
+  FeelType feelType = 3;
+  optional Message message = 7;
+}
