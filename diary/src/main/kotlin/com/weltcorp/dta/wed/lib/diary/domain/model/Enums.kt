@@ -7,7 +7,7 @@ enum class DiaryType {
     TYPE_4, // 간식
     TYPE_5, // 저녁
     TYPE_6, // 간식
-    TYPE_7, // 차가 간식
+    TYPE_7, // 추가 간식
 }
 
 enum class Who {
