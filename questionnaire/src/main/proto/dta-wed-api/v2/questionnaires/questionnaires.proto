@@ -15,6 +15,9 @@ service QuestionnairesData {
   rpc GetQuestionnaire(GetQuestionnaireRequest) returns (Questionnaire) {
     option (google.api.http) = { get: "/v2/questionnaires/{questionnaireId}" };
   }
+  rpc GetQuestionnaireAnswers(GetQuestionnaireAnswersRequest) returns (GetQuestionnaireAnswersResponse) {
+    option (google.api.http) = { get: "/v1/questionnaires/answers" };
+  }
 }
 
 message CreateQuestionnaireAnswerRequest {
@@ -103,4 +106,17 @@ message Questionnaire {
   BodyFeel bodyFeel = 2;
   FeelType feelType = 3;
   optional Message message = 7;
+}
+
+message GetQuestionnaireAnswersRequest {
+  int32 userId = 1;
+  optional int32 limit = 2;
+  optional int32 page = 3;
+}
+
+message GetQuestionnaireAnswersResponse {
+  int32 totalCount = 1;
+  int32 page = 2;
+  int32 count = 3;
+  repeated QuestionnaireAnswerData answers = 4;
 }

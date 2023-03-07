@@ -2,6 +2,7 @@ package com.weltcorp.dta.wed.lib.questionnaire.datasource
 
 import com.weltcorp.dta.wed.lib.questionnaire.QuestionnaireApiConfig
 import com.weltcorp.dta.wed.lib.questionnaire.domain.model.*
+import com.weltcorp.dta.wed.lib.questionnaire.domain.model.questionnaire.Questionnaire
 import dta.wed.api.v2.questionnaires.*
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
@@ -72,6 +73,24 @@ class QuestionnaireRemoteDataSourceGrpcImpl(
         header.put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
         header.put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
         val resp = stub().getQuestionnaire(request, header)
+
+        val questionnaire = Questionnaire(
+
+        )
+
+        return Single.just(questionnaire)
+    }
+
+    override suspend fun getQuestionnaireAnswers(userId: Int): Single<Questionnaire> {
+        val request = getQuestionnaireAnswersRequest {
+            this.userId = userId
+        }
+        val header = Metadata()
+        header.put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-lib-kotlin")
+        header.put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-api")
+        header.put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
+        header.put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
+        val resp = stub().getQuestionnaireAnswers(request, header)
 
         val questionnaire = Questionnaire()
 

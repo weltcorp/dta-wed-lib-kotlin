@@ -13,6 +13,7 @@ suspend fun main(args: Array<String>) {
 
     val diaryRemoteDataSource = QuestionnaireRemoteDataSourceGrpcImpl(config)
 
-    val a = diaryRemoteDataSource.getQuestionnaire()
+    val userId = 1
+    val a = diaryRemoteDataSource.getQuestionnaireAnswers(userId)
     println(a)
 }
