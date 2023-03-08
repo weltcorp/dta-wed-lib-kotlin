@@ -1,5 +1,6 @@
 package com.weltcorp.dta.wed.lib.diary.datasource
 
+import com.google.protobuf.kotlin.DslList
 import com.weltcorp.dta.wed.lib.diary.DiaryApiConfig
 import com.weltcorp.dta.wed.lib.diary.domain.model.*
 import dta.wed.api.v2.diaries.*
@@ -36,9 +37,9 @@ class DiaryRemoteDataSourceGrpcImpl(
         return _stub
     }
 
-    override suspend fun createDiary(userId: Int, meta: DiaryMeta, data: DiaryData): Completable {
+    override suspend fun createDiary(data: DiaryData): Completable {
 
-        if (meta.date == null) {
+        if (data.date == null) {
             throw IllegalArgumentException("DiaryMeta.date is null")
         }
         if (data.type == null) {
@@ -46,16 +47,60 @@ class DiaryRemoteDataSourceGrpcImpl(
         }
 
         val diaryData = diaryData {
+
             this.type = data.type.ordinal
+
+            data.time?.let { this.time = it }
+
+            data.whoList?.let {
+                val list = it.map { who -> who.ordinal }
+                this.who.addAll(list)
+            }
+
+            data.where?.let { this.where = it.ordinal }
+
+            data.food?.let {
+                this.food = diaryFood {
+                    it.text?.let { this.text = it }
+                    it.uris?.let { this.uris.addAll(it) }
+                }
+            }
+
+            data.beforeHungryScore?.let { this.beforeHungryScore = it }
+
+            data.afterHungryScore?.let { this.afterHungryScore = it }
+
+            data.feeling?.let { it ->
+                this.feeling = diaryFeeling {
+                    this.score = it.score
+                    it.event?.let {diaryFeelingEvent ->
+                        this.event = diaryFeelingEvent {
+                            this.id = diaryFeelingEvent.event.ordinal
+                            diaryFeelingEvent.text?.let { this.text = it }
+                        }
+                    }
+                }
+            }
+
+            data.significants?.let {
+                val list = it.map { significant -> significant.ordinal }
+                this.significants.addAll(list)
+            }
+
             this.isSkip = data.isSkip
         }
 
+        if (config.userId == 0) {
+            throw IllegalArgumentException("userId is not set")
+        }
+
         val request = createDiaryRequest {
-            this.userId = userId.toLong()
-            this.date = meta.date
+            this.userId = config.userId.toLong()
+            this.date = data.date
             this.data = diaryData
         }
         val header = Metadata()
+        header.put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "${config.userId}}")
         header.put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-lib-kotlin")
         header.put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-api")
         header.put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
@@ -64,9 +109,10 @@ class DiaryRemoteDataSourceGrpcImpl(
         return Completable.complete()
     }
 
-    override suspend fun getDiaries(userId: Int, startDate: Int, endDate: Int): Single<List<Diary>> {
+    override suspend fun getDiaries(startDate: Int, endDate: Int): Single<List<Diary>> {
 
         val header = Metadata()
+        header.put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "${config.userId}}")
         header.put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-lib-kotlin")
         header.put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-api")
         header.put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
@@ -142,25 +188,25 @@ class DiaryRemoteDataSourceGrpcImpl(
 fun convertDiaryType(value: Int): DiaryType {
     return when (value) {
         0 -> {
-            DiaryType.TYPE_1
+            DiaryType.TYPE_0
         }
         1 -> {
-            DiaryType.TYPE_2
+            DiaryType.TYPE_1
         }
         2 -> {
-            DiaryType.TYPE_3
+            DiaryType.TYPE_2
         }
         3 -> {
-            DiaryType.TYPE_4
+            DiaryType.TYPE_3
         }
         4 -> {
-            DiaryType.TYPE_5
+            DiaryType.TYPE_4
         }
         5 -> {
-            DiaryType.TYPE_6
+            DiaryType.TYPE_5
         }
         6 -> {
-            DiaryType.TYPE_7
+            DiaryType.TYPE_6
         }
         else -> {
             DiaryType.TYPE_1
