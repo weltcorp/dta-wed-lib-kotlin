@@ -50,14 +50,18 @@ Add the dependency
 	</dependency>
 ```
 
-## Intialization
+## Quickstart
+
+### Initialize the Client
 ```kotlin
-    val config = DiaryApiConfig.Builder()
-        .host("<HOST>") // optional, default localhost
-        .port(9090) // optional, default 9090
-        .auth("<YOUR-ACCESS-TOKEN>")
-        .userId(1)
-        .build()
+val config = DiaryApiConfig.Builder()
+  .host("<HOST>") // optional, default localhost
+  .port(9090) // optional, default 9090
+  .auth("<YOUR-ACCESS-TOKEN>")
+  .userId(1)
+  .build()
+
+val diaryRemoteDataSource = DiaryRemoteDataSourceGrpcImpl(config)
 ```
 
 ## Create a new diary
@@ -88,7 +92,6 @@ suspend fun main(args: Array<String>) {
         .text("밥")
         .uris(uris)
         .build()
-
 
     // Case 1: text is not null
     val event = DiaryFeelingEvent.Builder()
@@ -202,5 +205,5 @@ enum class Significant {
 }
 ```
 ### Date Format
-* Date format is UnixTimestamp
-  * ex. 1677037112 (Wed Feb 22 2023 12:38:32 GMT+0900)
+Date format is UnixTimestamp
+* ex. 1677037112 (Wed Feb 22 2023 12:38:32 GMT+0900)
