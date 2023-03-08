@@ -119,7 +119,7 @@ class DiaryRemoteDataSourceGrpcImpl(
         header.put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
 
         val request = getDiariesRequest{
-            this.userId = userId.toLong()
+            this.userId = config.userId.toLong()
             this.startDate = startDate
             this.endDate = endDate
         }
@@ -156,24 +156,19 @@ class DiaryRemoteDataSourceGrpcImpl(
                     }
                 }
 
-
                 val diaryData = DiaryData.Builder()
                     .type(diaryType)
+                    .date(date)
                     .time(time)
                     .whoList(getWhoList(diary.data.whoList))
+                    .where(getWhere(diary.data.where))
+                    .food(getFood(diary.data.food))
+                    .beforeHungryScore(diary.data.beforeHungryScore)
+                    .afterHungryScore(diary.data.afterHungryScore)
+                    .feeling(getFeeling(diary.data.feeling))
+                    .significants(getSignificants(diary.data.significantsList))
                     .isSkip(false)
                     .build()
-//                    println(diary.data.type)
-//                    println(diary.data.time)
-//                    println(diary.data.whoList)
-//                    println(diary.data.where)
-//                    println(diary.data.food.text)
-//                    println(diary.data.food.uriListList)
-//                    println(diary.data.beforeHungryScore)
-//                    println(diary.data.afterHungryScore)
-//                    println(diary.data.feeling.score)
-//                    println(diary.data.feeling.event.id)
-//                    println(diary.data.feeling.event.text)
 
                 val diary = Diary()
                 diary.meta = diaryMeta
@@ -182,6 +177,16 @@ class DiaryRemoteDataSourceGrpcImpl(
             }
         }
         return Single.just(diaries)
+    }
+
+
+    private fun getFood(food: Diaries.DiaryFood?): DiaryFood? {
+        return food?.let {
+            return DiaryFood.Builder()
+                .text(it.text)
+                .uris(it.urisList)
+                .build()
+        }
     }
 }
 
@@ -237,6 +242,90 @@ fun convertWho(value: Int): Who {
     }
 }
 
+fun convertFeelingEvent(value: Int): FeelingEvent {
+    return when (value) {
+        0 -> {
+            FeelingEvent.FE_0
+        }
+        1 -> {
+            FeelingEvent.FE_1
+        }
+        2 -> {
+            FeelingEvent.FE_2
+        }
+        3 -> {
+            FeelingEvent.FE_3
+        }
+        4 -> {
+            FeelingEvent.FE_3
+        }
+        5 -> {
+            FeelingEvent.FE_5
+        }
+        6 -> {
+            FeelingEvent.FE_6
+        }
+        else -> {
+            FeelingEvent.FE_0
+        }
+    }
+}
+
+fun convertSignificant(value: Int): Significant {
+    return when (value) {
+        0 -> {
+            Significant.S_0
+        }
+        1 -> {
+            Significant.S_1
+        }
+        2 -> {
+            Significant.S_2
+        }
+        3 -> {
+            Significant.S_3
+        }
+        4 -> {
+            Significant.S_4
+        }
+        5 -> {
+            Significant.S_5
+        }
+        6 -> {
+            Significant.S_6
+        }
+        7 -> {
+            Significant.S_7
+        }
+        else -> {
+            Significant.S_0
+        }
+    }
+}
+
+fun getWhere(value: Int): Where {
+    return when (value) {
+        0 -> {
+            Where.TABLE
+        }
+        1 -> {
+            Where.NOT_TABLE
+        }
+        2 -> {
+            Where.SCHOOL_OFFICE
+        }
+        3 -> {
+            Where.RESTAURANT
+        }
+        4 -> {
+            Where.ETC
+        }
+        else -> {
+            Where.ETC
+        }
+    }
+}
+
 fun getWhoList(whoList: List<Int>): List<Who>? {
     if (whoList.isEmpty()) {
         return null
@@ -244,6 +333,37 @@ fun getWhoList(whoList: List<Int>): List<Who>? {
     val list = mutableListOf<Who>()
     whoList.forEach {
         list.add(convertWho(it))
+    }
+    return list
+}
+
+private fun getFeeling(feeling: Diaries.DiaryFeeling?): DiaryFeeling? {
+    feeling?.let {
+        return DiaryFeeling.Builder()
+            .score(it.score)
+            .event(getEvent(it.event))
+            .build()
+    }
+    return null
+}
+
+private fun getEvent(event: Diaries.DiaryFeelingEvent?): DiaryFeelingEvent? {
+    event?.let {
+        return DiaryFeelingEvent.Builder()
+            .event(convertFeelingEvent(it.id))
+            .text(it.text)
+            .build()
+    }
+    return null
+}
+
+private fun getSignificants(significantsList: List<Int>): List<Significant>? {
+    if (significantsList.isEmpty()) {
+        return null
+    }
+    val list = mutableListOf<Significant>()
+    significantsList.forEach {
+        list.add(convertSignificant(it))
     }
     return list
 }
