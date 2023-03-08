@@ -1,14 +1,11 @@
 package com.weltcorp.dta.wed.lib.diary.datasource
 
-import com.google.protobuf.kotlin.DslList
 import com.weltcorp.dta.wed.lib.diary.DiaryApiConfig
 import com.weltcorp.dta.wed.lib.diary.domain.model.*
 import dta.wed.api.v2.diaries.*
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 
 class DiaryRemoteDataSourceGrpcImpl(
     val config: DiaryApiConfig
@@ -37,7 +34,7 @@ class DiaryRemoteDataSourceGrpcImpl(
         return _stub
     }
 
-    override suspend fun createDiary(data: DiaryData): Completable {
+    override suspend fun createDiary(data: DiaryData) {
 
         if (data.date == null) {
             throw IllegalArgumentException("DiaryMeta.date is null")
@@ -106,10 +103,9 @@ class DiaryRemoteDataSourceGrpcImpl(
         header.put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
         header.put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
         stub().createDiary(request, header)
-        return Completable.complete()
     }
 
-    override suspend fun getDiaries(startDate: Int, endDate: Int): Single<List<Diary>> {
+    override suspend fun getDiaries(startDate: Int, endDate: Int): List<Diary> {
 
         val header = Metadata()
         header.put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "${config.userId}}")
@@ -176,7 +172,7 @@ class DiaryRemoteDataSourceGrpcImpl(
                 diaries.add(diary)
             }
         }
-        return Single.just(diaries)
+        return diaries
     }
 
 
