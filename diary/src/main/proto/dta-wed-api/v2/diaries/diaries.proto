@@ -22,7 +22,7 @@ service DiariesData {
 
 message DiaryFood {
   optional string text = 1;
-  repeated string uriList = 2;
+  repeated string uris = 2;
 }
 
 message DiaryFeelingEvent {
@@ -33,11 +33,6 @@ message DiaryFeelingEvent {
 message DiaryFeeling {
   int32 score = 1 [(validate.rules).int32 = {gte: 1, lte: 5}];
   optional DiaryFeelingEvent event = 2;
-}
-
-message DiaryFeelingScore {
-  optional int32 score = 1 [(validate.rules).int32 = {gte: 1, lte: 5}];
-  optional int32 event = 2;
 }
 
 message DiarySchedule {
@@ -64,7 +59,7 @@ message DiaryData {
   optional int32 beforeHungryScore = 9 [(validate.rules).int32 = {gte: 0, lte: 4}];
   optional int32 afterHungryScore = 10 [(validate.rules).int32 = {gte: 0, lte: 4}];
   optional DiaryFeeling feeling = 11;
-  repeated int32 mistakes = 12;
+  repeated int32 significants = 12;
   bool isSkip = 13;
 }
 

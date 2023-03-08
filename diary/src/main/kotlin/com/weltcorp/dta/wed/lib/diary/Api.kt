@@ -17,6 +17,6 @@ class DiaryApiConfig private constructor (
         fun port(port: Int) = apply { this.port = port }
         fun auth(auth: String) = apply { this.auth = auth }
         fun userId(userId: Int) = apply { this.userId = userId }
-        fun build() = DiaryApiConfig(host, port, auth)
+        fun build() = DiaryApiConfig(host, port, auth, userId)
     }
 }
