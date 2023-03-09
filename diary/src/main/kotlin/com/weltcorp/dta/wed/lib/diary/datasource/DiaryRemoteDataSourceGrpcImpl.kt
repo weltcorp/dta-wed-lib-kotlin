@@ -105,6 +105,77 @@ class DiaryRemoteDataSourceGrpcImpl(
         stub().createDiary(request, header)
     }
 
+    override suspend fun updateDiary(data: DiaryData) {
+
+        var diaryId = 0
+        if (data.id == null) {
+            throw IllegalArgumentException("DiaryMeta.id is null")
+        } else {
+            diaryId = data.id!!
+            data.id = null
+        }
+        if (data.type != null) {
+            throw IllegalArgumentException("DiaryData.type is immutable")
+        }
+        if (data.date != null) {
+            throw IllegalArgumentException("DiaryData.date is immutable")
+        }
+
+        val diaryData = diaryData {
+
+            data.time?.let { this.time = it }
+
+            data.whoList?.let {
+                val list = it.map { who -> who.ordinal }
+                this.who.addAll(list)
+            }
+
+            data.where?.let { this.where = it.ordinal }
+
+            data.food?.let {
+                this.food = diaryFood {
+                    it.text?.let { this.text = it }
+                    it.uris?.let { this.uris.addAll(it) }
+                }
+            }
+
+            data.beforeHungryScore?.let { this.beforeHungryScore = it }
+
+            data.afterHungryScore?.let { this.afterHungryScore = it }
+
+            data.feeling?.let { it ->
+                this.feeling = diaryFeeling {
+                    this.score = it.score
+                    it.event?.let {diaryFeelingEvent ->
+                        this.event = diaryFeelingEvent {
+                            this.id = diaryFeelingEvent.event.ordinal
+                            diaryFeelingEvent.text?.let { this.text = it }
+                        }
+                    }
+                }
+            }
+
+            data.significants?.let {
+                val list = it.map { significant -> significant.ordinal }
+                this.significants.addAll(list)
+            }
+
+            this.isSkip = data.isSkip
+        }
+
+        val request = updateDiaryRequest {
+            this.id = diaryId
+            this.data = diaryData
+        }
+        val header = Metadata()
+        header.put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "${config.userId}}")
+        header.put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-lib-kotlin")
+        header.put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-api")
+        header.put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
+        header.put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
+        stub().updateDiary(request, header)
+    }
+
     override suspend fun getDiaries(startDate: Int, endDate: Int): List<Diary> {
 
         val header = Metadata()
@@ -176,14 +247,6 @@ class DiaryRemoteDataSourceGrpcImpl(
     }
 
 
-    private fun getFood(food: Diaries.DiaryFood?): DiaryFood? {
-        return food?.let {
-            return DiaryFood.Builder()
-                .text(it.text)
-                .uris(it.urisList)
-                .build()
-        }
-    }
 }
 
 fun convertDiaryType(value: Int): DiaryType {
@@ -362,4 +425,13 @@ private fun getSignificants(significantsList: List<Int>): List<Significant>? {
         list.add(convertSignificant(it))
     }
     return list
+}
+
+private fun getFood(food: Diaries.DiaryFood?): DiaryFood? {
+    return food?.let {
+        return DiaryFood.Builder()
+            .text(it.text)
+            .uris(it.urisList)
+            .build()
+    }
 }

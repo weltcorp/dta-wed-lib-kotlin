@@ -22,6 +22,10 @@ class DiaryRemoteDataSourceHttpImpl(
         //Todo: Implement this
     }
 
+    override suspend fun updateDiary(data: DiaryData) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getDiaries(startDate: Int, endDate: Int): List<Diary> {
         TODO("Not yet implemented")
     }
