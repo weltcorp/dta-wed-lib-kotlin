@@ -12,7 +12,11 @@ class DiaryFeelingEvent private constructor(
         fun event(event: FeelingEvent) = apply { this.event = event }
         fun text(text: String?) = apply {
             if (event != FeelingEvent.FE_6) {
-                throw IllegalArgumentException("text is allowed for event FE_6")
+                text?.length.run {
+                    if (this != null && this > 0) {
+                        throw IllegalArgumentException("text is allowed for event FE_6")
+                    }
+                }
             }
             this.text = text
         }

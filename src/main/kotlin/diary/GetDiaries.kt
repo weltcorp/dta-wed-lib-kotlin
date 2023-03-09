@@ -9,15 +9,13 @@ suspend fun main(args: Array<String>) {
         .host("localhost")
         .port(23100)
         .auth("<YOUR-TOKEN>")
-        .userId(17938)
+        .userId(1)
         .build()
 
     val diaryRemoteDataSource = DiaryRemoteDataSourceGrpcImpl(config)
 
     val startDate = 1675177200
     val endDate = 1677035497
-    diaryRemoteDataSource.getDiaries(startDate, endDate)
-        .blockingSubscribe {
-            println(it)
-        }
+    val diaries = diaryRemoteDataSource.getDiaries(startDate, endDate)
+    println(diaries)
 }
