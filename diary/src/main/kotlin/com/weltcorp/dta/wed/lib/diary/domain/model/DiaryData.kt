@@ -1,8 +1,9 @@
 package com.weltcorp.dta.wed.lib.diary.domain.model
 
 class DiaryData private constructor(
+    var id: Int?,
     val type: DiaryType?,
-    val date: Int, //UnixTime in seconds (ex. 1675177200)
+    val date: Int?, //UnixTime in seconds (ex. 1675177200)
     val time: String?,
     val whoList: List<Who>?,
     val where: Where?,
@@ -14,8 +15,9 @@ class DiaryData private constructor(
     val isSkip: Boolean = false
 ) {
     data class Builder(
+        var id: Int? = null,
         var type: DiaryType? = null,
-        var date: Int = 0,
+        var date: Int? = null,
         var time:String? = null,
         var whoList: List<Who>? = null,
         var where: Where? = null,
@@ -27,8 +29,9 @@ class DiaryData private constructor(
         var isSkip: Boolean = false
     ) {
 
+        fun id(id: Int) = apply { this.id = id }
         fun type(type: DiaryType) = apply { this.type = type }
-        fun date(date: Int) = apply { this.date = date}
+        fun date(date: Int?) = apply { this.date = date}
         fun time(time: String?) = apply { this.time = time}
         fun whoList(whoList: List<Who>?) = apply { this.whoList = whoList}
         fun where(where: Where?) = apply { this.where = where}
@@ -55,6 +58,19 @@ class DiaryData private constructor(
         fun significants(significants: List<Significant>?) = apply { this.significants = significants}
         fun isSkip(isSkip: Boolean) = apply { this.isSkip = isSkip}
 
-        fun build() = DiaryData(type, date, time, whoList, where, food, beforeHungryScore, afterHungryScore, feeling, significants, isSkip)
+        fun build() = DiaryData(
+            id,
+            type,
+            date,
+            time,
+            whoList,
+            where,
+            food,
+            beforeHungryScore,
+            afterHungryScore,
+            feeling,
+            significants,
+            isSkip
+        )
     }
 }

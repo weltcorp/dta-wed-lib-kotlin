@@ -13,5 +13,7 @@ interface RemoteDataSource {
 
     suspend fun createDiary(data: DiaryData)
 
+    suspend fun updateDiary(data: DiaryData)
+
     suspend fun getDiaries(startDate: Int, endDate: Int): List<Diary>
 }
