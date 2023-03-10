@@ -15,6 +15,9 @@ service DiariesData {
   rpc UpdateDiary(UpdateDiaryRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = { patch: "/v2/diaries/{id}", body: "*" };
   }
+  rpc DeleteDiary(DeleteDiaryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { delete: "/v2/diaries/{id}" };
+  }
   rpc GetDiaries(GetDiariesRequest) returns (GetDiariesResponse) {
     option (google.api.http) = { get: "/v2/diaries" };
   }
@@ -77,6 +80,10 @@ message CreateDiaryRequest {
 message UpdateDiaryRequest {
   int32 id = 1;
   optional DiaryData data = 2;
+}
+
+message DeleteDiaryRequest {
+  int32 id = 1;
 }
 
 message GetDiariesRequest {

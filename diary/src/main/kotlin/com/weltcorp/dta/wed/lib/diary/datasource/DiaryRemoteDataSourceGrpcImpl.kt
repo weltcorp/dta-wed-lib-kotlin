@@ -176,6 +176,20 @@ class DiaryRemoteDataSourceGrpcImpl(
         stub().updateDiary(request, header)
     }
 
+    override suspend fun deleteDiary(id: Int) {
+
+        val request = deleteDiaryRequest {
+            this.id = id
+        }
+        val header = Metadata()
+        header.put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "${config.userId}}")
+        header.put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-lib-kotlin")
+        header.put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wed-api")
+        header.put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
+        header.put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
+        stub().deleteDiary(request, header)
+    }
+
     override suspend fun getDiaries(startDate: Int, endDate: Int): List<Diary> {
 
         val header = Metadata()
