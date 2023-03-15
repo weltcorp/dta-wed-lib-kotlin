@@ -38,16 +38,16 @@ class DiaryData private constructor(
         fun food(food: DiaryFood?) = apply { this.food = food}
         fun beforeHungryScore(beforeHungryScore: Int?) = apply {
             beforeHungryScore?.let {
-                if (it < 0 || it > 4) {
-                    throw IllegalArgumentException("beforeHungryScore must be between 0 and 4")
+                if (it < 1 || it > 5) {
+                    throw IllegalArgumentException("beforeHungryScore must be between 1 and 5")
                 }
             }
             this.beforeHungryScore = beforeHungryScore
         }
         fun afterHungryScore(afterHungryScore: Int?) = apply {
             afterHungryScore?.let {
-                if (it < 0 || it > 4) {
-                    throw IllegalArgumentException("afterHungryScore must be between 0 and 4")
+                if (it < 1 || it > 5) {
+                    throw IllegalArgumentException("afterHungryScore must be between 1 and 5")
                 }
             }
             this.afterHungryScore = afterHungryScore
