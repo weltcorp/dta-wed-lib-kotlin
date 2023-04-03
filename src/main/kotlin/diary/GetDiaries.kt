@@ -8,8 +8,7 @@ suspend fun main(args: Array<String>) {
     val config = DiaryApiConfig.Builder()
         .host("localhost")
         .port(23100)
-//        .auth("<YOUR-TOKEN>")
-        .auth("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NiIsImlhdCI6MTY2MTkyMDk4MCwiZXhwIjoxNzA0MDM0Nzk5LCJkaSI6MSwicGkiOjcsImFpIjo2NiwiYXQiOjAsInR5cGUiOiJhY2Nlc3MifQ.800xibRKahi4z4LiUr2H3YW6-ywJuXhS8YnGQW8QTvc")
+        .auth("<YOUR-TOKEN>")
         .userId(1)
         .build()
 
