@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm")
     id("java")
     id("com.google.protobuf") version "0.8.13"
-    `maven-publish`
+    id("maven-publish")
 }
 
 repositories {
@@ -74,21 +74,12 @@ protobuf {
     }
 }
 
-publishing {
-    publications {
-//        mavenJava(MavenPublication) {
-//            from components.java
-//
-//            groupId = 'com.github.WonJoong'
-//            artifactId = 'kodi'
-//            version = '0.2.1'
-//        }
-        create<MavenPublication>("maven") {
-            groupId = "com.github.weltcorp"
-            artifactId = "dta-wed-lib-kotlin"
-            version = "0.1.10"
-
-            from(components["java"])
+afterEvaluate() {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["java"])
+            }
         }
     }
 }
