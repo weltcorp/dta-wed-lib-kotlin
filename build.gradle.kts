@@ -17,6 +17,7 @@ val rxjavaVersion = "3.0.11"
 val grpcVersion = "3.19.4"
 
 dependencies {
+    implementation(project(":core"))
     implementation(project(":diary"))
     implementation(project(":questionnaire"))
     implementation("io.reactivex.rxjava3:rxjava:$rxjavaVersion")
