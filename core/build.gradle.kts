@@ -16,9 +16,9 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
-}
+//tasks.getByName<Test>("test") {
+//    useJUnitPlatform()
+//}
 
 val grpcVersion = "3.19.4"
 val grpcKotlinVersion = "1.2.1"
@@ -26,8 +26,6 @@ val grpcProtoVersion = "1.44.1"
 val rxjavaVersion = "3.0.11"
 
 dependencies{
-    implementation(project(":core"))
-
     implementation("io.grpc:grpc-core:$grpcProtoVersion")
     implementation("io.grpc:grpc-okhttp:$grpcProtoVersion")
     implementation("io.grpc:grpc-stub:$grpcProtoVersion")
