@@ -7,6 +7,17 @@ plugins {
     id("maven-publish")
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8" // JVM 대상을 Java 8로 설정합니다.
+    }
+}
+
+tasks.withType<JavaCompile> {
+    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+    targetCompatibility = JavaVersion.VERSION_1_8.toString()
+}
+
 repositories {
     mavenCentral()
 }

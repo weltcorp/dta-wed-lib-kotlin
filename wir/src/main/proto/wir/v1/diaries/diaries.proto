@@ -1,0 +1,40 @@
+syntax = "proto3";
+package dta.wir.api.v1.diaries;
+
+option go_package = "github.com/weltcorp/dta-lib-proto/go-api/wir/v1/diaries";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+
+service DiariesData {
+  rpc CreateUserDiary(CreateUserDiaryRequest) returns (CreateUserDiaryResponse) {
+    option (google.api.http) = { post: "/v1/diaries/users/{userId}", body: "*" };
+  }
+}
+
+message CreateUserDiaryRequest {
+  int32 userId = 1[(validate.rules).int32.gt = 0];
+  int64 date = 2[(validate.rules).int64.gt = 0];
+  DiaryAnswer answers = 3;
+}
+
+message CreateUserDiaryResponse {
+  int32 answerId = 1;
+}
+
+message DiaryAnswer{
+  int64 lot = 1;
+  int64 ast = 2;
+  int64 aet = 3;
+  int32 waso = 4;
+  repeated Answer problem = 5;
+  repeated Answer lifestyle = 6;
+  bool pill = 7;
+  int32 nap = 8;
+  int32 sleepQuality = 9;
+}
+
+message Answer {
+  int32 optionKey = 2;
+  string answerText = 3;
+}

@@ -11,28 +11,33 @@ class DiaryRemoteDataSourceGrpcImpl(
     val config: DiaryApiConfig
 ) : RemoteDataSource {
 
-    var _channel = ManagedChannelBuilder
-        .forAddress(config.host, config.port)
-        .usePlaintext()
-        .build()
+
+    private var _channel = getMangedChannel()
+
 
     var _stub = DiariesDataGrpcKt.DiariesDataCoroutineStub(getChannel())
-    fun getChannel(): ManagedChannel {
+    private fun getChannel(): ManagedChannel {
         if (_channel.isShutdown || _channel.isTerminated) {
-            _channel = ManagedChannelBuilder
-                .forAddress(config.host, config.port)
-                .usePlaintext()
-                .build()
+            _channel = getMangedChannel()
         }
         return _channel
     }
 
+    private fun getMangedChannel(): ManagedChannel {
+        val channel = ManagedChannelBuilder
+            .forTarget("${config.host}${if (config.port != null) ":${config.port}" else ""}")
+        if (config.port != null) {
+            channel.usePlaintext()
+        }
+        return channel.build()
+    }
     fun stub(): DiariesDataGrpcKt.DiariesDataCoroutineStub {
         if (_stub == null) {
             _stub = DiariesDataGrpcKt.DiariesDataCoroutineStub(getChannel())
         }
         return _stub
     }
+
 
     override suspend fun createDiary(data: DiaryData) {
 

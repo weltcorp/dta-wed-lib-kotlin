@@ -1,0 +1,30 @@
+syntax = "proto3";
+package dta.wir.api.v1.questionnaires;
+
+option go_package = "github.com/weltcorp/dta-lib-proto/go-api/wir/v1/questionnaires";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+
+service QuestionnairesData {
+  rpc CreateQuestionnaire(CreateQuestionnaireRequest) returns (CreateQuestionnaireResponse) {
+    option (google.api.http) = { post: "/v1/questionnaires/{questionnaireId}/users/{userId}", body: "*" };
+  }
+}
+
+message CreateQuestionnaireRequest {
+  int32 userId = 1[(validate.rules).int32.gt = 0];
+  int32 questionnaireId = 2[(validate.rules).int32.gt = 0];
+  int64 date = 3[(validate.rules).int64.gt = 0];
+  repeated Answer answers = 4;
+}
+
+message Answer {
+  int32 itemKey = 1;
+  int32 optionKey = 2;
+  string answerText = 3;
+}
+
+message CreateQuestionnaireResponse {
+  int32 answerId = 1;
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package dta.wir.api.core;
+
+option go_package = "github.com/weltcorp/dta-lib-proto/go-api/wir/core";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service Core {
+  rpc Healthz(HealthzRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { get: "/healthz" };
+  }
+}
+
+message HealthzRequest {}
+

@@ -1,0 +1,43 @@
+syntax = "proto3";
+package dta.wir.api.v1.articles;
+
+option go_package = "github.com/weltcorp/dta-lib-proto/go-api/wir/v1/articles";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/struct.proto";
+
+service ArticlesData {
+  rpc GetUserArticles(GetUserArticlesRequest) returns (GetUserArticlesResponse) {
+    option (google.api.http) = { get: "/v1/articles/users/{userId}"};
+  }
+}
+
+message GetUserArticlesRequest {
+  int32 userId = 1;
+}
+
+message GetUserArticlesResponse {
+  repeated Session data = 1;
+}
+
+message Session {
+  int32 sessionId = 1;
+  int32 order = 2;
+  string name = 3;
+  string description = 4;
+  int32 projectAppId = 5;
+  int32 userLearningStatus = 6;
+  repeated SessionItem sessionItems = 7;
+}
+
+message SessionItem {
+  int32 sessionItemId = 1;
+  int32 itemTypeId = 2;
+  int32 order = 3;
+  string name = 4;
+  string description = 5;
+  int32 userLearningStatus = 7;
+  google.protobuf.Struct data = 8;
+  repeated int32 pageIds = 9;
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/dta-wed-lib-kotlin.iml" filepath="$PROJECT_DIR$/.idea/dta-wed-lib-kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/dta-wed-lib-kotlin.core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/dta-wed-lib-kotlin.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/dta-wed-lib-kotlin.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/dta-wed-lib-kotlin.core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/dta-wed-lib-kotlin.core.test.iml" filepath="$PROJECT_DIR$/.idea/modules/core/dta-wed-lib-kotlin.core.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/diary/dta-wed-lib-kotlin.diary.iml" filepath="$PROJECT_DIR$/.idea/modules/diary/dta-wed-lib-kotlin.diary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/diary/dta-wed-lib-kotlin.diary.main.iml" filepath="$PROJECT_DIR$/.idea/modules/diary/dta-wed-lib-kotlin.diary.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/diary/dta-wed-lib-kotlin.diary.test.iml" filepath="$PROJECT_DIR$/.idea/modules/diary/dta-wed-lib-kotlin.diary.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dta-wed-lib-kotlin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dta-wed-lib-kotlin.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/questionnaire/dta-wed-lib-kotlin.questionnaire.iml" filepath="$PROJECT_DIR$/.idea/modules/questionnaire/dta-wed-lib-kotlin.questionnaire.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/questionnaire/dta-wed-lib-kotlin.questionnaire.main.iml" filepath="$PROJECT_DIR$/.idea/modules/questionnaire/dta-wed-lib-kotlin.questionnaire.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/questionnaire/dta-wed-lib-kotlin.questionnaire.test.iml" filepath="$PROJECT_DIR$/.idea/modules/questionnaire/dta-wed-lib-kotlin.questionnaire.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dta-wed-lib-kotlin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/dta-wed-lib-kotlin.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wir/dta-wed-lib-kotlin.wir.iml" filepath="$PROJECT_DIR$/.idea/modules/wir/dta-wed-lib-kotlin.wir.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wir/dta-wed-lib-kotlin.wir.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wir/dta-wed-lib-kotlin.wir.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wir/dta-wed-lib-kotlin.wir.test.iml" filepath="$PROJECT_DIR$/.idea/modules/wir/dta-wed-lib-kotlin.wir.test.iml" />
+    </modules>
+  </component>
+</project>
