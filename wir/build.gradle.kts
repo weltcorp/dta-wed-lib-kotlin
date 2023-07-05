@@ -8,7 +8,7 @@ plugins {
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "1.8" // JVM 대상을 Java 8로 설정합니다.
+        jvmTarget = "1.8"
     }
 }
 

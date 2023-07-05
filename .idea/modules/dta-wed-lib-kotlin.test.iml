@@ -15,7 +15,6 @@
           <stringArguments>
             <stringArg name="classpath">
               <args>
-                <arg>$MODULE_DIR$/../../build/classes/kotlin/main</arg>
                 <arg>$MODULE_DIR$/../../core/build/libs/core-0.5.3.jar</arg>
                 <arg>$MODULE_DIR$/../../diary/build/libs/diary-0.5.3.jar</arg>
                 <arg>$MODULE_DIR$/../../questionnaire/build/libs/questionnaire-0.5.3.jar</arg>

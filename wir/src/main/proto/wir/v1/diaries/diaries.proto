@@ -7,31 +7,48 @@ import "validate/validate.proto";
 import "google/api/annotations.proto";
 
 service DiariesData {
-  rpc CreateUserDiary(CreateUserDiaryRequest) returns (CreateUserDiaryResponse) {
-    option (google.api.http) = { post: "/v1/diaries/users/{userId}", body: "*" };
+  rpc PutUserDiaryToday(PutUserDiaryTodayRequest) returns (PutUserDiaryTodayResponse) {
+    option (google.api.http) = { put: "/v1/diaries/users/{userId}/today", body: "*" };
+  }
+  rpc GetUserDiary(GetUserDiaryRequest) returns (GetUserDiaryResponse) {
+    option (google.api.http) = { get: "/v1/diaries/users/{userId}" };
   }
 }
 
-message CreateUserDiaryRequest {
+message PutUserDiaryTodayRequest {
   int32 userId = 1[(validate.rules).int32.gt = 0];
-  int64 date = 2[(validate.rules).int64.gt = 0];
+  int32 date = 2[(validate.rules).int32.gt = 0];
   DiaryAnswer answers = 3;
 }
 
-message CreateUserDiaryResponse {
+message PutUserDiaryTodayResponse {
   int32 answerId = 1;
 }
 
+message GetUserDiaryRequest {
+  int32 userId = 1[(validate.rules).int32.gt = 0];
+  optional int32 date = 2[(validate.rules).int32.gt = 0];
+  optional int32 answerId = 3[(validate.rules).int32.gt = 0];
+}
+
+message GetUserDiaryResponse {
+  int32 answerId = 1;
+  int32 date = 2;
+  DiaryAnswer answers = 3;
+}
+
 message DiaryAnswer{
-  int64 lot = 1;
-  int64 ast = 2;
-  int64 aet = 3;
-  int32 waso = 4;
-  repeated Answer problem = 5;
-  repeated Answer lifestyle = 6;
-  bool pill = 7;
-  int32 nap = 8;
-  int32 sleepQuality = 9;
+  bool dns = 1;
+  optional int32 lot = 2;
+  optional int32 ast = 3;
+  optional int32 aet = 4;
+  optional int32 waso = 5;
+  repeated Answer problem = 6;
+  repeated Answer lifestyle = 7;
+  bool pill = 8;
+  int32 nap = 9;
+  optional int32 sleepQuality = 10;
+  optional int32 tst = 11;
 }
 
 message Answer {

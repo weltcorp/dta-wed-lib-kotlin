@@ -5,9 +5,9 @@ import com.weltcorp.dta.wir.lib.v1.model.diary.NapDuration
 import com.weltcorp.dta.wir.lib.v1.model.diary.SleepDiaryAnswer
 import com.weltcorp.dta.wir.lib.v1.model.diary.SleepPill
 import dta.wir.api.v1.diaries.Diaries
-import dta.wir.api.v1.diaries.Diaries.CreateUserDiaryRequest
 import dta.wir.api.v1.diaries.Diaries.DiaryAnswer
 import dta.wir.api.v1.diaries.DiariesDataGrpcKt
+import dta.wir.api.v1.diaries.PutUserDiaryTodayRequestKt
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
@@ -27,7 +27,7 @@ class SleepDiaryDataSourceGrpcImpl(private val config: ApiConfig): SleepDiaryDat
             put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wir-app-android")
             put(Metadata.Key.of("x-request-dtx-dst-protocol", Metadata.ASCII_STRING_MARSHALLER), "grpc")
             put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-wir-api")
-            put(Metadata.Key.of("x-request-dtx-dst-service-version", Metadata.ASCII_STRING_MARSHALLER), "com/weltcorp/dta/wir/lib/v1")
+            put(Metadata.Key.of("x-request-dtx-dst-service-version", Metadata.ASCII_STRING_MARSHALLER), "v1")
             put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
         }
     }
@@ -57,17 +57,20 @@ class SleepDiaryDataSourceGrpcImpl(private val config: ApiConfig): SleepDiaryDat
 
     override suspend fun createAnswer(dateTime: Int, answer: SleepDiaryAnswer) {
         val seoulTimeZone = ZoneId.of("Asia/Seoul")
+        val sleepQuality = answer.star?.ordinal?.plus(1)?: 3
 
-        val request = CreateUserDiaryRequest.newBuilder()
+        val request = Diaries.PutUserDiaryTodayRequest.newBuilder()
             .setUserId(config.userId)
-            .setDate(dateTime.toLong())
+            .setDate(dateTime)
             .setAnswers(DiaryAnswer.newBuilder()
-                .setLot(ZonedDateTime.of(answer.lot, seoulTimeZone).toEpochSecond())
-                .setAst(ZonedDateTime.of(answer.ast, seoulTimeZone).toEpochSecond())
-                .setAet(ZonedDateTime.of(answer.aet, seoulTimeZone).toEpochSecond())
+                .setTst(answer.tst)
+                .setLot(ZonedDateTime.of(answer.lot, seoulTimeZone).toEpochSecond().toInt())
+                .setAst(ZonedDateTime.of(answer.ast, seoulTimeZone).toEpochSecond().toInt())
+                .setAet(ZonedDateTime.of(answer.aet, seoulTimeZone).toEpochSecond().toInt())
                 .setWaso(answer.waso)
                 .addAllProblem(answer.problems.map { problem ->
                     Diaries.Answer.newBuilder()
+                        .setOptionKey(problem.ordinal.plus(1))
                         .build()
                 })
                 .addAllLifestyle(answer.lifestyles.map { lifestyle ->
@@ -103,6 +106,7 @@ class SleepDiaryDataSourceGrpcImpl(private val config: ApiConfig): SleepDiaryDat
                         else -> 0
                     }
                 )
+                .setSleepQuality(sleepQuality)
             )
             .build()
 
@@ -111,7 +115,7 @@ class SleepDiaryDataSourceGrpcImpl(private val config: ApiConfig): SleepDiaryDat
         }
 
         try {
-            val resp = stub().createUserDiary(request, header)
+            val resp = stub().putUserDiaryToday(request, header)
             println(resp)
         } catch (e: StatusRuntimeException) {
             println(e)

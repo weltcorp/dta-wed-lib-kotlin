@@ -7,6 +7,7 @@ data class SleepDiaryAnswer private constructor(
     val ast: LocalDateTime?,
     val aet: LocalDateTime?,
     val waso: Int,
+    val tst: Int,
     val problems: List<SleepProblem>,
     val lifestyles: List<SleepLifestyle>,
     val pill: SleepPill?,
@@ -18,6 +19,7 @@ data class SleepDiaryAnswer private constructor(
         var ast: LocalDateTime? = null,
         var aet: LocalDateTime? = null,
         var waso: Int = 0,
+        var tst: Int = 0,
         var problems: List<SleepProblem> = emptyList(),
         var lifestyles: List<SleepLifestyle> = emptyList(),
         var pill: SleepPill? = null,
@@ -39,6 +41,10 @@ data class SleepDiaryAnswer private constructor(
         fun waso(value: Int) = apply {
             // TODO: validate level
             this.waso = value
+        }
+        fun tst(value: Int) = apply {
+            // TODO: validate level
+            this.tst = value
         }
         fun problems(problems: List<SleepProblem>) = apply {
             // TODO: validate level
@@ -65,6 +71,7 @@ data class SleepDiaryAnswer private constructor(
             ast,
             aet,
             waso,
+            tst,
             problems,
             lifestyles,
             pill,
